@@ -23,6 +23,7 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="headers/ascensor.hpp" />
 		<Unit filename="headers/pedido.hpp" />
 		<Unit filename="src/main.cpp" />
 		<Extensions />
