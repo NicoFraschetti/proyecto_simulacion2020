@@ -7,11 +7,17 @@
 
 class Pedido {
     private:
+        /*Piso al que le pediremos al ascensor que vaya*/
         int piso;
     public:
+        //constructor
         Pedido();
+        //destructor
         ~Pedido();
+        /*Obtenemos el piso al que vamos*/
         int getPiso();
+        /*Cambiamos el piso destino
+        (en teoria nunca lo usariamos)*/
         void setPiso(int newPiso);
 };
 
