@@ -1,4 +1,5 @@
 #include <iostream>
+#include "../headers/pedido.hpp"
 
 using namespace std;
 
