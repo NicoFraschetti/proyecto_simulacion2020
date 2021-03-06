@@ -5,7 +5,7 @@
 #include <eosim/core/entity.hpp>
 #include <string>
 
-class Pedido {
+class Pedido: public eosim::core::Entity {
     private:
         /*Piso al que le pediremos al ascensor que vaya*/
         int piso;
