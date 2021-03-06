@@ -24,7 +24,6 @@
 			<Add option="-fexceptions" />
 		</Compiler>
 		<Unit filename="headers/pedido.hpp" />
-		<Unit filename="main.cpp" />
 		<Unit filename="src/main.cpp" />
 		<Extensions />
 	</Project>
