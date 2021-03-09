@@ -21,12 +21,16 @@ public:
     int pisoAscensores[2];
 	// distribucion aleatoria de arribos de pacientes (exponencial)
 	eosim::dist::NegexpDist arribos;
-	// cola de espera por camas
-	eosim::utils::EntityQueueFifo cola;
 
-	eosim::core::Renewable ascensor1;
+	eosim::utils::EntityQueueFifo q0;
 
-	eosim::core::Renewable ascensor2;
+	eosim::utils::EntityQueueFifo q1;
+
+	eosim::utils::EntityQueueFifo q2;
+
+	eosim::core::Renewable libreAscensor1;
+
+	eosim::core::Renewable libreAscensor2;
 
 	// constructor del modelo
 	Ascensor(double tasaArribos);
