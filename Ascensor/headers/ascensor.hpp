@@ -21,8 +21,12 @@ public:
     int[2] pisoAscensores;
 	// distribucion aleatoria de arribos de pacientes (exponencial)
 	eosim::dist::NegexpDist arribos;
-	// cola de espera por camas
-	eosim::utils::EntityQueueFifo cola;
+
+	eosim::utils::EntityQueueFifo q0;
+
+	eosim::utils::EntityQueueFifo q1;
+
+	eosim::utils::EntityQueueFifo q2;
 
 	eosim::core::Renewable libreAscensor1;
 
