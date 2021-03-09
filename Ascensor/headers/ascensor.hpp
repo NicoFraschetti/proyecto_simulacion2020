@@ -24,9 +24,9 @@ public:
 	// cola de espera por camas
 	eosim::utils::EntityQueueFifo cola;
 
-	eosim::core::Renewable ascensor1;
+	eosim::core::Renewable libreAscensor1;
 
-	eosim::core::Renewable ascensor2;
+	eosim::core::Renewable libreAscensor2;
 
 	// constructor del modelo
 	Ascensor(double tasaArribos);

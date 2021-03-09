@@ -25,6 +25,7 @@
 		</Compiler>
 		<Unit filename="headers/ascensor.hpp" />
 		<Unit filename="headers/pedido.hpp" />
+		<Unit filename="src/ascensor.cpp" />
 		<Unit filename="src/main.cpp" />
 		<Extensions />
 	</Project>
