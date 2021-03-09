@@ -5,15 +5,12 @@
 #include <eosim/core/entity.hpp>
 #include <string>
 
-class Pedido: public eosim::core::Entity {
-    private:
-        /*Piso al que le pediremos al ascensor que vaya*/
-        int piso;
+class PedidoEntity: public eosim::core::Entity {
     public:
         //constructor
-        Pedido();
+        PedidoEntity();
         //destructor
-        ~Pedido();
+        ~PedidoEntity();
         /*Obtenemos el piso al que vamos*/
         int getPiso();
         /*Cambiamos el piso destino

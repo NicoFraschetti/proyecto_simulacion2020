@@ -18,7 +18,7 @@ private:
 
 public:
 
-    int[2] pisoAscensores;
+    int pisoAscensores[2];
 	// distribucion aleatoria de arribos de pacientes (exponencial)
 	eosim::dist::NegexpDist arribos;
 	// cola de espera por camas
