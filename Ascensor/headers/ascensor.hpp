@@ -18,10 +18,7 @@ private:
 
 public:
 
-    typedef struct pisoAscensores {
-    int pisoAscensor1;
-    int pisoAscensor2;
-    };
+    int[2] pisoAscensores;
 	// distribucion aleatoria de arribos de pacientes (exponencial)
 	eosim::dist::NegexpDist arribos;
 	// cola de espera por camas
