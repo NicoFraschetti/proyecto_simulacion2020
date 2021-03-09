@@ -5,12 +5,14 @@
 #include <eosim/core/entity.hpp>
 #include <string>
 
-class PedidoEntity: public eosim::core::Entity {
+class Pedido: public eosim::core::Entity {
+    private:
+        int piso;
     public:
         //constructor
-        PedidoEntity();
+        Pedido();
         //destructor
-        ~PedidoEntity();
+        ~Pedido();
         /*Obtenemos el piso al que vamos*/
         int getPiso();
         /*Cambiamos el piso destino

@@ -1,21 +1,15 @@
 #include "../headers/pedido.hpp"
 #include <stdlib.h>
-class Pedido : PedidoEntity {
-    private:
-        /*Piso al que le pediremos al ascensor que vaya*/
-        int piso;
-    public:
-        Pedido(){
-            piso = rand() % 10;
-        }
+Pedido::Pedido() {
+    piso = rand() % 10;
+}
 
-        ~Pedido() {}
+Pedido::~Pedido() {}
 
-        int getPiso() {
-            return piso;
-        }
+int Pedido::getPiso() {
+    return piso;
+}
 
-        void setPiso(int newPiso) {
-            piso = newPiso;
-        }
-};
+void Pedido::setPiso(int newPiso) {
+    piso = newPiso;
+}
