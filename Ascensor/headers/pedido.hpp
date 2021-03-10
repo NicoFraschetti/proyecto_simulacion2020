@@ -30,9 +30,32 @@ public:
 	PedidoFeeder(eosim::core::Model& model);
 	// destructor
 	~PedidoFeeder();
-	// rutina del evento fijo
+	// rutina del evento ligado
 	void eventRoutine(eosim::core::Entity* who);
 };
+
+class InicioDecision: public eosim::core::CEvent {
+public:
+    // constructor
+    InicioDecision(eosim::core::Model& model);
+    // destructor
+    ~InicioDecision();
+    // rutina del evento condicional
+    void eventRoutine();
+};
+
+// identificador del evento de finalizacion de la decision
+const std::string finDecision = "FinDecision";
+
+class FinDecision: public eosim::core::BEvent {
+public:
+    // constructor
+    FinDecision(eosim::core::Model& model);
+
+    ~FinDecision();
+
+    void eventRoutine(eosim::core::Entity* who);
+}
 
 
 #endif
