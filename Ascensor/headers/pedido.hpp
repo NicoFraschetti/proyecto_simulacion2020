@@ -2,6 +2,7 @@
 #define PEDIDO_HPP_
 
 #include <eosim/core/bevent.hpp>
+#include <eosim/core/cevent.hpp>
 #include <eosim/core/entity.hpp>
 #include <string>
 
@@ -34,28 +35,15 @@ public:
 	void eventRoutine(eosim::core::Entity* who);
 };
 
-class InicioDecision: public eosim::core::CEvent {
+class DecidirAscensor: public eosim::core::CEvent {
 public:
     // constructor
-    InicioDecision(eosim::core::Model& model);
+    DecidirAscensor(eosim::core::Model& model);
     // destructor
-    ~InicioDecision();
+    ~DecidirAscensor();
     // rutina del evento condicional
     void eventRoutine();
 };
-
-// identificador del evento de finalizacion de la decision
-const std::string finDecision = "FinDecision";
-
-class FinDecision: public eosim::core::BEvent {
-public:
-    // constructor
-    FinDecision(eosim::core::Model& model);
-
-    ~FinDecision();
-
-    void eventRoutine(eosim::core::Entity* who);
-}
 
 
 #endif

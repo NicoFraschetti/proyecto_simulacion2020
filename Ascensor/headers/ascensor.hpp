@@ -15,6 +15,8 @@ private:
 	double tasaArribos;
 	// evento de arribo de los pacientes y alimentador (fijo)
 	PedidoFeeder pF;
+	// evento donde se decide que ascensor utilizara el pedido (condicional)
+	DecidirAscensor dA;
 
 public:
 
