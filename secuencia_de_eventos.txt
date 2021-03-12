@@ -1,0 +1,10 @@
+Iniciar controlador ->
+Consultar piso ->
+Decision del controlador ->
+Senal del controlador ->
+si subir/bajar:
+	Interpretacion del ascensor de la senal ->
+	Volver a la segunda linea.
+sino:
+	Interpretacion ascensor ->
+	Fin controlador.

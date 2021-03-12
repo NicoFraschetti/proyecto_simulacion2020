@@ -31,6 +31,7 @@ ConsultarAscensor1::ConsultarAscensor1(Model& model): BEvent(Consulta1, model) {
 
 ConsultarAscensor1::~ConsultarAscensor1() {}
 
+/*Le pasamos al controlador donde esta el ascensor*/
 void ConsultarAscensor1::eventRoutine(Entity* who) {
 	ModeloAscensor& ascensor = dynamic_cast<ModeloAscensor&>(owner);
     ascensor.controlador1.setPisoActual(ascensor.ascensor1.getPiso());
@@ -40,7 +41,9 @@ void ConsultarAscensor1::eventRoutine(Entity* who) {
 SubirAscensor1::SubirAscensor1(Model& model): BEvent(SubirA1, model) {}
 
 SubirAscensor1::~SubirAscensor1() {}
-
+/*Subimos 1 piso, planificamos de forma instantanea el notificarlo
+(por adelantado) y planificamos en 2 segundos otra decision del controlador,
+que seria cuando el ascensor realmente llego*/
 void SubirAscensor1::eventRoutine(Entity* who) {
 	ModeloAscensor& ascensor = dynamic_cast<ModeloAscensor&>(owner);
     ascensor.ascensor1.subir();
@@ -52,7 +55,9 @@ void SubirAscensor1::eventRoutine(Entity* who) {
 BajarAscensor1::BajarAscensor1(Model& model): BEvent(BajarA1, model) {}
 
 BajarAscensor1::~BajarAscensor1() {}
-
+/*Bajamos 1 piso, planificamos de forma instantanea el notificarlo
+(por adelantado) y planificamos en 2 segundos otra decision del controlador,
+que seria cuando el ascensor realmente llego*/
 void BajarAscensor1::eventRoutine(Entity* who) {
 	ModeloAscensor& ascensor = dynamic_cast<ModeloAscensor&>(owner);
     ascensor.ascensor1.bajar();
@@ -63,7 +68,7 @@ void BajarAscensor1::eventRoutine(Entity* who) {
 PararAscensor1::PararAscensor1(Model& model): BEvent(PararA1, model) {}
 
 PararAscensor1::~PararAscensor1() {}
-
+/*Programamos el fin del viaje del ascensor (devolver el token)*/
 void PararAscensor1::eventRoutine(Entity* who) {
 	ModeloAscensor& ascensor = dynamic_cast<ModeloAscensor&>(owner);
     ascensor.schedule(0.0, new Entity, FinC1);
@@ -71,7 +76,7 @@ void PararAscensor1::eventRoutine(Entity* who) {
 
 
 //eventos a2
-
+/*Los comentarios de arriba tambien aplican para estos*/
 ConsultarAscensor2::ConsultarAscensor2(Model& model): BEvent(Consulta2, model) {}
 
 ConsultarAscensor2::~ConsultarAscensor2() {}
