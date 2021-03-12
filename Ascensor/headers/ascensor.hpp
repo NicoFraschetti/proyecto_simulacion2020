@@ -30,7 +30,7 @@ public:
 	// destructor
 	~ConsultarAscensor1();
 	// rutina del evento ligado
-	void ConsultarAscensor1(eosim::core::Entity* who);
+	void eventRoutine(eosim::core::Entity* who);
 };
 
 const std::string SubirA1 = "SubirAscensor1";
@@ -42,7 +42,7 @@ public:
 	// destructor
 	~SubirAscensor1();
 	// rutina del evento ligado
-	void SubirAscensor1(eosim::core::Entity* who);
+	void eventRoutine(eosim::core::Entity* who);
 };
 
 const std::string BajarA1 = "BajarAscensor1";
@@ -54,7 +54,7 @@ public:
 	// destructor
 	~BajarAscensor1();
 	// rutina del evento ligado
-	void BajarAscensor1(eosim::core::Entity* who);
+	void eventRoutine(eosim::core::Entity* who);
 };
 
 const std::string PararA1 = "PararAscensor1";
@@ -66,7 +66,7 @@ public:
 	// destructor
 	~PararAscensor1();
 	// rutina del evento ligado
-	void PararAscensor1(eosim::core::Entity* who);
+	void eventRoutine(eosim::core::Entity* who);
 };
 
 //eventos a2
@@ -80,7 +80,7 @@ public:
 	// destructor
 	~ConsultarAscensor2();
 	// rutina del evento ligado
-	void ConsultarAscensor2(eosim::core::Entity* who);
+	void eventRoutine(eosim::core::Entity* who);
 };
 
 const std::string SubirA2 = "SubirAscensor2";
@@ -92,7 +92,7 @@ public:
 	// destructor
 	~SubirAscensor2();
 	// rutina del evento ligado
-	void SubirAscensor2(eosim::core::Entity* who);
+	void eventRoutine(eosim::core::Entity* who);
 };
 
 const std::string BajarA2 = "BajarAscensor2";
@@ -104,7 +104,7 @@ public:
 	// destructor
 	~BajarAscensor2();
 	// rutina del evento ligado
-	void BajarAscensor2(eosim::core::Entity* who);
+	void eventRoutine(eosim::core::Entity* who);
 };
 
 const std::string PararA2 = "PararAscensor2";
@@ -116,7 +116,7 @@ public:
 	// destructor
 	~PararAscensor2();
 	// rutina del evento ligado
-	void PararAscensor2(eosim::core::Entity* who);
+	void eventRoutine(eosim::core::Entity* who);
 };
 
 

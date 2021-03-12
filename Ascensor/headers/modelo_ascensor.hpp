@@ -9,6 +9,7 @@
 #include <eosim/statics/observation.hpp>
 #include "pedido.hpp"
 #include "ascensor.hpp"
+#include "controlador.hpp"
 
 class ModeloAscensor: public eosim::core::Model {
 private:
@@ -41,13 +42,13 @@ private:
 	ConsultarAscensor1 cA1;
 	SubirAscensor1 sA1;
 	BajarAscensor1 bA1;
-	PararAscensor1 PA1;
+	PararAscensor1 pA1;
 
 	//eventos ascensor 2
 	ConsultarAscensor2 cA2;
 	SubirAscensor2 sA2;
 	BajarAscensor2 bA2;
-	PararAscensor2 PA2;
+	PararAscensor2 pA2;
 
 public:
 

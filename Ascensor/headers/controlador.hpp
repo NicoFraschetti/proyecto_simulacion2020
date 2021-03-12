@@ -7,9 +7,9 @@
             int pisoDeseado;
             int pisoActual;
         public:
-            Ascensor();
+            Controlador();
 
-            ~Ascensor();
+            ~Controlador();
 
             int getPisoDeseado();
 
@@ -31,7 +31,7 @@ public:
 	// destructor
 	~IniciarControlador1();
 	// rutina del evento condicional
-	void IniciarControlador1();
+	void eventRoutine();
 };
 
 const std::string DecisionC1 = "DecisionControlador1";
@@ -43,7 +43,7 @@ public:
 	// destructor
 	~DecisionControlador1();
 	// rutina del evento ligado
-	void DecisionControlador1(eosim::core::Entity* who);
+	void eventRoutine(eosim::core::Entity* who);
 };
 
 const std::string SubirC1 = "SubirControlador1";
@@ -55,7 +55,7 @@ public:
 	// destructor
 	~SubirControlador1();
 	// rutina del evento ligado
-	void SubirControlador1(eosim::core::Entity* who);
+	void eventRoutine(eosim::core::Entity* who);
 };
 
 const std::string BajarC1 = "BajarControlador1";
@@ -67,7 +67,7 @@ public:
 	// destructor
 	~BajarControlador1();
 	// rutina del evento ligado
-	void BajarControlador1(eosim::core::Entity* who);
+	void eventRoutine(eosim::core::Entity* who);
 };
 
 const std::string PararC1 = "PararControlador1";
@@ -79,7 +79,7 @@ public:
 	// destructor
 	~PararControlador1();
 	// rutina del evento ligado
-	void PararControlador1(eosim::core::Entity* who);
+	void eventRoutine(eosim::core::Entity* who);
 };
 
 const std::string FinC1 = "FinalizarControlador1";
@@ -91,7 +91,7 @@ public:
 	// destructor
 	~FinalizarControlador1();
 	// rutina del evento ligado
-	void FinalizarControlador1(eosim::core::Entity* who);
+	void eventRoutine(eosim::core::Entity* who);
 };
 
 //eventos c2
@@ -102,7 +102,7 @@ public:
 	// destructor
 	~IniciarControlador2();
 	// rutina del evento condicional
-	void IniciarControlador2();
+	void eventRoutine();
 };
 
 const std::string DecisionC2 = "DecisionControlador2";
@@ -114,7 +114,7 @@ public:
 	// destructor
 	~DecisionControlador2();
 	// rutina del evento ligado
-	void DecisionControlador2(eosim::core::Entity* who);
+	void eventRoutine(eosim::core::Entity* who);
 };
 
 const std::string SubirC2 = "SubirControlador2";
@@ -126,7 +126,7 @@ public:
 	// destructor
 	~SubirControlador2();
 	// rutina del evento ligado
-	void SubirControlador2(eosim::core::Entity* who);
+	void eventRoutine(eosim::core::Entity* who);
 };
 
 const std::string BajarC2 = "BajarControlador2";
@@ -138,7 +138,7 @@ public:
 	// destructor
 	~BajarControlador2();
 	// rutina del evento ligado
-	void BajarControlador2(eosim::core::Entity* who);
+	void eventRoutine(eosim::core::Entity* who);
 };
 
 const std::string PararC2 = "PararControlador2";
@@ -150,7 +150,7 @@ public:
 	// destructor
 	~PararControlador2();
 	// rutina del evento ligado
-	void PararControlador2(eosim::core::Entity* who);
+	void eventRoutine(eosim::core::Entity* who);
 };
 
 const std::string FinC2 = "FinalizarControlador2";
@@ -162,7 +162,7 @@ public:
 	// destructor
 	~FinalizarControlador2();
 	// rutina del evento ligado
-	void FinalizarControlador2(eosim::core::Entity* who);
+	void eventRoutine(eosim::core::Entity* who);
 };
 
 

@@ -1,7 +1,7 @@
 #include "../headers/pedido.hpp"
 #include <stdlib.h>
 #include <iostream>
-#include "../headers/ascensor.hpp"
+#include "../headers/modelo_ascensor.hpp"
 
 // Definicion de la entidad pedido
 
