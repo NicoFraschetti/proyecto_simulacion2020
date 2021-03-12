@@ -8,22 +8,62 @@
 #include <eosim/statics/timeweighted.hpp>
 #include <eosim/statics/observation.hpp>
 #include "pedido.hpp"
+#include "ascensor.hpp"
 
 class ModeloAscensor: public eosim::core::Model {
 private:
 	// tasa de arribos de los pedidos
 	double tasaArribos;
+
 	// evento de arribo de los pacientes y alimentador (fijo)
 	PedidoFeeder pF;
+
 	// evento donde se decide que ascensor utilizara el pedido (condicional)
 	DecidirAscensor dA;
+
+	//eventos controlador 1
+	IniciarControlador1 iC1; //condicional
+	DecisionControlador1 dC1;
+	SubirControlador1 sC1;
+	BajarControlador1 bC1;
+	PararControlador1 pC1;
+	FinalizarControlador1 fC1;
+
+    //eventos controlador 2
+	IniciarControlador2 iC2; //condicional
+	DecisionControlador2 dC2;
+	SubirControlador2 sC2;
+	BajarControlador2 bC2;
+	PararControlador2 pC2;
+	FinalizarControlador2 fC2;
+
+	//eventos ascensor 1
+	ConsultarAscensor1 cA1;
+	SubirAscensor1 sA1;
+	BajarAscensor1 bA1;
+	PararAscensor1 PA1;
+
+	//eventos ascensor 2
+	ConsultarAscensor2 cA2;
+	SubirAscensor2 sA2;
+	BajarAscensor2 bA2;
+	PararAscensor2 PA2;
 
 public:
 
     // seed de los pedidos que generaremos
 	int seedPisos;
 
-    int pisoAscensores[2];
+    //Ascensores
+    Ascensor ascensor1;
+
+    Ascensor ascensor2;
+
+    //Controladores
+    Controlador controlador1;
+
+    Controlador controlador2;
+
 	// distribucion aleatoria de arribos de pacientes (exponencial)
 	eosim::dist::NegexpDist arribos;
 
