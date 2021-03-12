@@ -10,7 +10,9 @@ class Pedido: public eosim::core::Entity {
     private:
         int piso;
     public:
-        //constructor
+        //constructor con seed
+        Pedido(int seed);
+        //constructor sin seed
         Pedido();
         //destructor
         ~Pedido();

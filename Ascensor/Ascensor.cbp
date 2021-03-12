@@ -28,6 +28,7 @@
 		<Unit filename="headers/pedido.hpp" />
 		<Unit filename="src/ascensor.cpp" />
 		<Unit filename="src/main.cpp" />
+		<Unit filename="src/pedido.cpp" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

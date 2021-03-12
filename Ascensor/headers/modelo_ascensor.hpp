@@ -1,5 +1,5 @@
-#ifndef ASCENSOR_HPP_
-#define ASCENSOR_HPP_
+#ifndef MODELO_ASCENSOR_HPP_
+#define MODELO_ASCENSOR_HPP_
 
 #include <eosim/core/model.hpp>
 #include <eosim/utils/entityqueuefifo.hpp>
@@ -9,9 +9,9 @@
 #include <eosim/statics/observation.hpp>
 #include "pedido.hpp"
 
-class Ascensor: public eosim::core::Model {
+class ModeloAscensor: public eosim::core::Model {
 private:
-	// tasa de arribos de los pacientes
+	// tasa de arribos de los pedidos
 	double tasaArribos;
 	// evento de arribo de los pacientes y alimentador (fijo)
 	PedidoFeeder pF;
@@ -19,6 +19,9 @@ private:
 	DecidirAscensor dA;
 
 public:
+
+    // seed de los pedidos que generaremos
+	int seedPisos;
 
     int pisoAscensores[2];
 	// distribucion aleatoria de arribos de pacientes (exponencial)
@@ -35,9 +38,9 @@ public:
 	eosim::core::Renewable libreAscensor2;
 
 	// constructor del modelo
-	Ascensor(double tasaArribos);
+	ModeloAscensor(double tasaArribos, int seedPisos);
 	// destructor del modelo
-	~Ascensor();
+	~ModeloAscensor();
 	// inicializa y registra los atributos del modelo, operacion abstracta de eosim::core::Model
 	void init();
 	// lleva al modelo a su estado inicial, operacion abstracta de eosim::core::Model

@@ -7,17 +7,18 @@ using namespace eosim::dist;
 
 using namespace std;
 
-Ascensor::Ascensor(double tasaArribos):
+ModeloAscensor::ModeloAscensor(double tasaArribos, int seedPisos):
             tasaArribos(tasaArribos),
+            seedPisos(seedPisos),
             pF(*this),
             dA(*this),
             arribos(MT19937, tasaArribos),
             libreAscensor1(1, 1),
             libreAscensor2(1, 1) {}
 
-Ascensor::~Ascensor() {}
+ModeloAscensor::~ModeloAscensor() {}
 
-void Ascensor::init() {
+void ModeloAscensor::init() {
     registerBEvent(&pF);
 
     registerCEvent(&dA);
@@ -26,6 +27,6 @@ void Ascensor::init() {
 }
 
 
-void Ascensor::doInitialSchedules() {
-    schedule(0.0, new Pedido(), pedidoF);
+void ModeloAscensor::doInitialSchedules() {
+    schedule(0.0, new Pedido(seedPisos), pedidoF);
 }
