@@ -1,5 +1,6 @@
 #include "../headers/modelo_ascensor.hpp"
 #include "../headers/controlador.hpp"
+#include <iostream>
 
 Controlador::Controlador() {
     pisoActual = 0;
@@ -36,8 +37,10 @@ donde esta el ascensor y una decision del controlador*/
 void IniciarControlador1::eventRoutine() {
 	ModeloAscensor& ascensor = dynamic_cast<ModeloAscensor&>(owner);
 	if(!ascensor.q1.empty() && ascensor.libreAscensor1.isAvailable(1)) {
-        Entity who = *(ascensor.q1.pop());
-        Pedido& p = dynamic_cast<Pedido&>(who);
+        Entity* who = ascensor.q1.pop();
+        Pedido& p = dynamic_cast<Pedido&>(*who);
+        ascensor.tEspera.log(ascensor.getSimTime() - p.getClock());
+        ascensor.utilizacionAscensores.log((ascensor.libreAscensor1.getMax()+ascensor.libreAscensor2.getMax())-(ascensor.libreAscensor1.getQuantity()+ascensor.libreAscensor2.getQuantity()));
         ascensor.libreAscensor1.acquire(1);
         ascensor.controlador1.setPisoDeseado(p.getPiso());
         ascensor.schedule(0.0, new Entity(), Consulta1);
@@ -99,6 +102,7 @@ FinalizarControlador1::~FinalizarControlador1() {}
 /*Devolvemos el token, ya que el ascensor esta libre*/
 void FinalizarControlador1::eventRoutine(Entity* who) {
 	ModeloAscensor& ascensor = dynamic_cast<ModeloAscensor&>(owner);
+	ascensor.utilizacionAscensores.log((ascensor.libreAscensor1.getMax()+ascensor.libreAscensor2.getMax())-(ascensor.libreAscensor1.getQuantity()+ascensor.libreAscensor2.getQuantity()));
     ascensor.libreAscensor1.returnBin(1);
 }
 
@@ -110,10 +114,12 @@ IniciarControlador2::~IniciarControlador2() {}
 
 void IniciarControlador2::eventRoutine() {
 	ModeloAscensor& ascensor = dynamic_cast<ModeloAscensor&>(owner);
-	if(!ascensor.q2.empty() && ascensor.libreAscensor2.isAvailable(2)) {
-        Entity who = *(ascensor.q2.pop());
-        Pedido& p = dynamic_cast<Pedido&>(who);
-        ascensor.libreAscensor2.acquire(2);
+	if(!ascensor.q2.empty() && ascensor.libreAscensor2.isAvailable(1)) {
+        Entity* who = ascensor.q2.pop();
+        Pedido& p = dynamic_cast<Pedido&>(*who);
+        ascensor.tEspera.log(ascensor.getSimTime() - p.getClock());
+        ascensor.utilizacionAscensores.log((ascensor.libreAscensor1.getMax()+ascensor.libreAscensor2.getMax())-(ascensor.libreAscensor1.getQuantity()+ascensor.libreAscensor2.getQuantity()));
+        ascensor.libreAscensor2.acquire(1);
         ascensor.controlador2.setPisoDeseado(p.getPiso());
         ascensor.schedule(0.0, new Entity(), Consulta2);
         ascensor.schedule(0.0, new Entity(), DecisionC2);
@@ -173,7 +179,8 @@ FinalizarControlador2::~FinalizarControlador2() {}
 
 void FinalizarControlador2::eventRoutine(Entity* who) {
 	ModeloAscensor& ascensor = dynamic_cast<ModeloAscensor&>(owner);
-    ascensor.libreAscensor2.returnBin(2);
+    ascensor.utilizacionAscensores.log((ascensor.libreAscensor1.getMax()+ascensor.libreAscensor2.getMax())-(ascensor.libreAscensor1.getQuantity()+ascensor.libreAscensor2.getQuantity()));
+    ascensor.libreAscensor2.returnBin(1);
 }
 
 

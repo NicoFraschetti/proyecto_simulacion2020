@@ -24,6 +24,14 @@ int Pedido::getPiso() {
 void Pedido::setPiso(int newPiso) {
     piso = newPiso;
 }
+
+double Pedido::getTiempoLlegada() {
+    return tiempoLlegada;
+}
+
+void Pedido::setTiempoLlegada(double tiempo) {
+    tiempoLlegada = tiempo;
+}
 using namespace eosim::core;
 // Definicion del evento ligado PedidoFeeder
 
@@ -33,7 +41,9 @@ PedidoFeeder::~PedidoFeeder() {}
 
 void PedidoFeeder::eventRoutine(Entity* who) {
 	// se anuncia la llegada del paciente
-	std::cout << "llego un pedido en " << who->getClock() << "\n";
+	//std::cout << "llego un pedido en " << who->getClock() << "\n";
+	Pedido& p = dynamic_cast<Pedido&>(*who);
+	p.setTiempoLlegada(who -> getClock());
 	ModeloAscensor& ascensor = dynamic_cast<ModeloAscensor&>(owner);
 	ascensor.q0.push(who);
 	ascensor.schedule(ascensor.arribos.sample(), new Pedido(), pedidoF);
@@ -48,20 +58,25 @@ DecidirAscensor::~DecidirAscensor() {}
 void DecidirAscensor::eventRoutine() {
 	ModeloAscensor& ascensor = dynamic_cast<ModeloAscensor&>(owner);
 	if(!ascensor.q0.empty()) {
+        Entity* who = ascensor.q0.pop();
         if(ascensor.libreAscensor1.isAvailable(1)) {
-            ascensor.q1.push(ascensor.q0.pop()); /*Si esta libre el ascensor 1 lo enviamos ahi*/
+            ascensor.q1.push(who); /*Si esta libre el ascensor 1 lo enviamos ahi*/
+            //std::cout << "Se eligio el ascensor 1 en " << who -> getClock() << "\n";
         }
         else {
             if(ascensor.libreAscensor2.isAvailable(1)) {
-                ascensor.q2.push(ascensor.q0.pop()); /*Si no esta libre el primer ascensor y el segundo si, lo enviamos al segundo*/
+                ascensor.q2.push(who); /*Si no esta libre el primer ascensor y el segundo si, lo enviamos al segundo*/
+               // std::cout << "Se eligio el ascensor 2 en " << who -> getClock() << "\n";
             }
             else {
                 int random = rand();
                 if (random % 2) { /*sino lo enviamos a cualquier ascensor*/
-                    ascensor.q1.push(ascensor.q0.pop());
+                    ascensor.q1.push(who);
+                 //   std::cout << "Se eligio el ascensor 1 en " << who -> getClock() << "\n";
                 }
                 else {
-                    ascensor.q2.push(ascensor.q0.pop());
+                    ascensor.q2.push(who);
+                   // std::cout << "Se eligio el ascensor 2 en " << who -> getClock() << "\n";
                 }
             }
         }

@@ -9,6 +9,7 @@
 class Pedido: public eosim::core::Entity {
     private:
         int piso;
+        double tiempoLlegada;
     public:
         //constructor con seed
         Pedido(int seed);
@@ -21,6 +22,8 @@ class Pedido: public eosim::core::Entity {
         /*Cambiamos el piso destino
         (en teoria nunca lo usariamos)*/
         void setPiso(int newPiso);
+        double getTiempoLlegada();
+        void setTiempoLlegada(double tiempo);
 };
 
 

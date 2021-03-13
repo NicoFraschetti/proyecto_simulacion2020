@@ -41,6 +41,8 @@ ModeloAscensor::ModeloAscensor(double tasaArribos, int seedPisos):
             bA2(*this),
             pA2(*this),
 
+            tEspera("Tiempos de Espera para subir al ascensor"),
+            utilizacionAscensores("Factor de utilizacion ascensores", *this),
             arribos(MT19937, tasaArribos),
             libreAscensor1(1, 1),
             libreAscensor2(1, 1) {}

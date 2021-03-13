@@ -74,6 +74,10 @@ public:
 
 	eosim::utils::EntityQueueFifo q2;
 
+	eosim::statics::Observation tEspera;
+
+    eosim::statics::TimeWeighted utilizacionAscensores;
+
 	eosim::core::Renewable libreAscensor1;
 
 	eosim::core::Renewable libreAscensor2;

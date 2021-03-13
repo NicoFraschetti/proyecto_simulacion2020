@@ -1,5 +1,6 @@
 #include "../headers/modelo_ascensor.hpp"
 #include "../headers/ascensor.hpp"
+#include<iostream>
 
 Ascensor::Ascensor() {
     piso = 1;
