@@ -7,6 +7,7 @@
 #include <eosim/dist/negexpdist.hpp>
 #include <eosim/statics/timeweighted.hpp>
 #include <eosim/statics/observation.hpp>
+#include <fstream>
 #include "pedido.hpp"
 #include "ascensor.hpp"
 #include "controlador.hpp"
@@ -21,6 +22,7 @@ private:
 
 	// evento donde se decide que ascensor utilizara el pedido (condicional)
 	DecidirAscensor dA;
+	DecidirAscensorInteligente dAI;
 
 	//eventos controlador 1
 	IniciarControlador1 iC1; //condicional
@@ -49,6 +51,7 @@ private:
 	SubirAscensor2 sA2;
 	BajarAscensor2 bA2;
 	PararAscensor2 pA2;
+
 
 public:
 
@@ -82,8 +85,15 @@ public:
 
 	eosim::core::Renewable libreAscensor2;
 
+    FILE *trayectoriaA1;
+    FILE *trayectoriaA2;
+
+
+	int graficos;
+	int inteligencia;
+
 	// constructor del modelo
-	ModeloAscensor(double tasaArribos, int seedPisos);
+	ModeloAscensor(double tasaArribos, int seedPisos, int graficos, int inteligencia);
 	// destructor del modelo
 	~ModeloAscensor();
 	// inicializa y registra los atributos del modelo, operacion abstracta de eosim::core::Model

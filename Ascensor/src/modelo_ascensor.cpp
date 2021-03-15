@@ -7,11 +7,12 @@ using namespace eosim::dist;
 
 using namespace std;
 
-ModeloAscensor::ModeloAscensor(double tasaArribos, int seedPisos):
+ModeloAscensor::ModeloAscensor(double tasaArribos, int seedPisos, int g, int i):
             tasaArribos(tasaArribos),
             seedPisos(seedPisos),
             pF(*this),
             dA(*this),
+            dAI(*this),
 
             //eventos controlador 1
             iC1(*this), //condicional
@@ -45,7 +46,9 @@ ModeloAscensor::ModeloAscensor(double tasaArribos, int seedPisos):
             utilizacionAscensores("Factor de utilizacion ascensores", *this),
             arribos(MT19937, tasaArribos),
             libreAscensor1(1, 1),
-            libreAscensor2(1, 1) {}
+            libreAscensor2(1, 1),
+            graficos(g),
+            inteligencia(i) {}
 
 ModeloAscensor::~ModeloAscensor() {}
 
@@ -53,6 +56,7 @@ void ModeloAscensor::init() {
     registerBEvent(&pF);
 
     registerCEvent(&dA);
+    registerCEvent(&dAI);
 
     //eventos controlador 1
     registerCEvent(&iC1); //condicional
@@ -84,6 +88,16 @@ void ModeloAscensor::init() {
 
 
     registerDist(&arribos);
+    //poner un flag por velocidad
+    if(graficos == 1) {
+        //Creamos los archivos
+        trayectoriaA1 = fopen("output/trayectoriaA1.txt","w+");
+        fprintf(trayectoriaA1, "0 0\n");
+        fclose(trayectoriaA1);
+        trayectoriaA2 = fopen("output/trayectoriaA2.txt","w+");
+        fprintf(trayectoriaA2,"0 0\n");
+        fclose(trayectoriaA2);
+    }
 }
 
 

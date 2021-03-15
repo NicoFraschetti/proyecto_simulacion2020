@@ -1,5 +1,6 @@
 #include "../headers/pedido.hpp"
 #include <stdlib.h>
+#include <math.h>
 #include <iostream>
 #include "../headers/modelo_ascensor.hpp"
 
@@ -7,7 +8,7 @@
 
 Pedido::Pedido(int seed) {
     srand(seed);
-    piso = rand() % 10;
+    piso = 3;//rand() % 10;
 }
 
 
@@ -57,7 +58,7 @@ DecidirAscensor::~DecidirAscensor() {}
 // rutina del evento condicional que inicia la actividad de decision del ascensor (ascensor tonto)
 void DecidirAscensor::eventRoutine() {
 	ModeloAscensor& ascensor = dynamic_cast<ModeloAscensor&>(owner);
-	if(!ascensor.q0.empty()) {
+	if(!ascensor.q0.empty() && ascensor.inteligencia != 1) {
         Entity* who = ascensor.q0.pop();
         if(ascensor.libreAscensor1.isAvailable(1)) {
             ascensor.q1.push(who); /*Si esta libre el ascensor 1 lo enviamos ahi*/
@@ -81,5 +82,36 @@ void DecidirAscensor::eventRoutine() {
             }
         }
 	}
+}
 
+double tiempoEstimadoAscensor(eosim::utils::EntityQueueFifo* q, Controlador* c) {
+    double tiempoParcial = abs(c->getPisoDeseado()-c->getPisoActual())*2.0;
+    int lugarAscensor = c->getPisoDeseado();
+    for (unsigned int i=0; i<q->size();i++) {
+        Entity* who = q->operator[](i);
+        Pedido& p = dynamic_cast<Pedido&>(*who);
+        tiempoParcial += (abs(lugarAscensor-p.getPiso())+0.0)*2.0;
+        lugarAscensor = p.getPiso();
+    }
+    return tiempoParcial;
+}
+
+DecidirAscensorInteligente::DecidirAscensorInteligente(eosim::core::Model& model): CEvent(model) {}
+
+DecidirAscensorInteligente::~DecidirAscensorInteligente() {}
+
+void DecidirAscensorInteligente::eventRoutine() {
+    ModeloAscensor& ascensor = dynamic_cast<ModeloAscensor&>(owner);
+	if(!ascensor.q0.empty() && ascensor.inteligencia == 1) {
+        if(tiempoEstimadoAscensor(&(ascensor.q1),&(ascensor.controlador1)) <= tiempoEstimadoAscensor(&(ascensor.q2),&(ascensor.controlador2))) {
+            Entity* who = ascensor.q0.pop();
+            Pedido& p = dynamic_cast<Pedido&>(*who);
+            ascensor.q1.push(who);
+        }
+        else {
+            Entity* who = ascensor.q0.pop();
+            Pedido& p = dynamic_cast<Pedido&>(*who);
+            ascensor.q2.push(who);
+        }
+	}
 }

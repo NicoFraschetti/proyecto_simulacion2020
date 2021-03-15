@@ -50,5 +50,15 @@ public:
     void eventRoutine();
 };
 
+class DecidirAscensorInteligente: public eosim::core::CEvent {
+public:
+    // constructor
+    DecidirAscensorInteligente(eosim::core::Model& model);
+    // destructor
+    ~DecidirAscensorInteligente();
+    // rutina del evento condicional
+    void eventRoutine();
+};
+
 
 #endif

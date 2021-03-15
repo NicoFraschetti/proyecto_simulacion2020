@@ -1,6 +1,7 @@
 #include "../headers/modelo_ascensor.hpp"
 #include "../headers/controlador.hpp"
 #include <iostream>
+#include <string>
 
 Controlador::Controlador() {
     pisoActual = 0;
@@ -27,103 +28,144 @@ void Controlador::setPisoDeseado(int newPiso) {
 
 using namespace eosim::core;
 
+void LogTiempos(ModeloAscensor* m, Pedido* p) {
+    m->tEspera.log(m -> getSimTime() - p->getClock());
+}
+
+void LogUtilizacion(ModeloAscensor* m) {
+    m->utilizacionAscensores.log((m->libreAscensor1.getMax()+m->libreAscensor2.getMax())-(m->libreAscensor1.getQuantity()+m->libreAscensor2.getQuantity()));
+}
+
+//eventos generales
+/*Tomamos el token del ascensor, programamos una consulta de
+donde esta el ascensor y una decision del controlador*/
+void IniciarControlador(eosim::utils::EntityQueueFifo* q, eosim::core::Renewable* t,Controlador* c, ModeloAscensor* m, std::string eventoConsulta, std::string eventoDecision) {
+    if(!q->empty() && t->isAvailable(1)) {
+        Entity* who = q->pop();
+        Pedido& p = dynamic_cast<Pedido&>(*who);
+        LogTiempos(m,&p);
+        LogUtilizacion(m);
+        t->acquire(1);
+        c->setPisoDeseado(p.getPiso());
+        delete(who);
+        m->schedule(0.0, new Entity(),eventoConsulta);
+        m->schedule(0.0, new Entity(),eventoDecision);
+    }
+}
+
+/*Segun donde este el ascensor y donde queramos ir,
+programaremos una senal u otra*/
+void DecisionControlador(Entity* who, Controlador* c, ModeloAscensor* m, std::string eventoSubir, std::string eventoBajar, std::string eventoParar) {
+    if(c->getPisoDeseado() < c-> getPisoActual()) {
+        m ->schedule(0.0, new Entity(), eventoBajar);
+    }
+    else {
+        if(c-> getPisoDeseado() > c->getPisoActual()) {
+            m->schedule(0.0, new Entity(), eventoSubir);
+        }
+        else {
+            m->schedule(0.0, new Entity(), eventoParar);
+        }
+    }
+    delete(who);
+}
+
+/*Senal del controlador para subir un piso*/
+void SubirControlador(Entity* who, ModeloAscensor* m, std::string eventoSubir) {
+    m->schedule(0.0, new Entity(), eventoSubir);
+    delete(who);
+}
+
+/*Senal del controlador para bajar un piso*/
+void BajarControlador(Entity* who, ModeloAscensor* m, std::string eventoBajar) {
+    m->schedule(0.0, new Entity(), eventoBajar);
+    delete(who);
+}
+
+/*Senal del controlador para parar*/
+void PararControlador(Entity* who, ModeloAscensor* m, std::string eventoParar) {
+    m->schedule(0.0, new Entity(), eventoParar);
+    delete(who);
+}
+
+/*Devolvemos el token, ya que el ascensor esta libre*/
+void FinalizarControlador(Entity* who, ModeloAscensor* m, Controlador* c, eosim::core::Renewable* t, FILE* internalFileName, char* externalFileName) {
+    LogUtilizacion(m);
+    t->returnBin(1);
+    delete(who);
+    if(m->graficos) {
+        internalFileName = fopen(externalFileName,"a");
+        fprintf(internalFileName,"%d %lf\n",c->getPisoActual(),m->getSimTime());
+        fclose(internalFileName);
+    }
+}
+
 //eventos c1
 
 IniciarControlador1::IniciarControlador1(Model& model): CEvent(model) {}
 
 IniciarControlador1::~IniciarControlador1() {}
-/*Tomamos el token del ascensor, programamos una consulta de
-donde esta el ascensor y una decision del controlador*/
+
 void IniciarControlador1::eventRoutine() {
 	ModeloAscensor& ascensor = dynamic_cast<ModeloAscensor&>(owner);
-	if(!ascensor.q1.empty() && ascensor.libreAscensor1.isAvailable(1)) {
-        Entity* who = ascensor.q1.pop();
-        Pedido& p = dynamic_cast<Pedido&>(*who);
-        ascensor.tEspera.log(ascensor.getSimTime() - p.getClock());
-        ascensor.utilizacionAscensores.log((ascensor.libreAscensor1.getMax()+ascensor.libreAscensor2.getMax())-(ascensor.libreAscensor1.getQuantity()+ascensor.libreAscensor2.getQuantity()));
-        ascensor.libreAscensor1.acquire(1);
-        ascensor.controlador1.setPisoDeseado(p.getPiso());
-        ascensor.schedule(0.0, new Entity(), Consulta1);
-        ascensor.schedule(0.0, new Entity(), DecisionC1);
-    }
+    IniciarControlador(&(ascensor.q1),&(ascensor.libreAscensor1),&(ascensor.controlador1),&ascensor,Consulta1,DecisionC1);
 }
 
 DecisionControlador1::DecisionControlador1(Model& model): BEvent(DecisionC1, model) {}
 
 DecisionControlador1::~DecisionControlador1() {}
-/*Segun donde este el ascensor y donde queramos ir,
-programaremos una senal u otra*/
+
 void DecisionControlador1::eventRoutine(Entity* who) {
 	ModeloAscensor& ascensor = dynamic_cast<ModeloAscensor&>(owner);
-    if(ascensor.controlador1.getPisoDeseado() < ascensor.controlador1.getPisoActual()) {
-        ascensor.schedule(0.0, new Entity(), BajarC1);
-    }
-    else {
-        if(ascensor.controlador1.getPisoDeseado() > ascensor.controlador1.getPisoActual()) {
-            ascensor.schedule(0.0, new Entity(), SubirC1);
-        }
-        else {
-            ascensor.schedule(0.0, new Entity(), PararC1);
-        }
-    }
+    DecisionControlador(who, &(ascensor.controlador1), &ascensor, SubirC1, BajarC1, PararC1);
 }
 
 
 SubirControlador1::SubirControlador1(Model& model): BEvent(SubirC1, model) {}
 
 SubirControlador1::~SubirControlador1() {}
-/*Senal del controlador para subir un piso*/
+
 void SubirControlador1::eventRoutine(Entity* who) {
 	ModeloAscensor& ascensor = dynamic_cast<ModeloAscensor&>(owner);
-    ascensor.schedule(0.0, new Entity(), SubirA1);
+    SubirControlador(who, &ascensor, SubirA1);
 }
 
 BajarControlador1::BajarControlador1(Model& model): BEvent(BajarC1, model) {}
 
 BajarControlador1::~BajarControlador1() {}
-/*Senal del controlador para bajar un piso*/
+
 void BajarControlador1::eventRoutine(Entity* who) {
 	ModeloAscensor& ascensor = dynamic_cast<ModeloAscensor&>(owner);
-    ascensor.schedule(0.0, new Entity(), BajarA1);
+    BajarControlador(who, &ascensor, BajarA1);
 }
 
 PararControlador1::PararControlador1(Model& model): BEvent(PararC1, model) {}
 
 PararControlador1::~PararControlador1() {}
-/*Senal del controlador para parar*/
+
 void PararControlador1::eventRoutine(Entity* who) {
 	ModeloAscensor& ascensor = dynamic_cast<ModeloAscensor&>(owner);
-    ascensor.schedule(0.0, new Entity(), PararA1);
+    PararControlador(who, &ascensor, PararA1);
 }
 
 FinalizarControlador1::FinalizarControlador1(Model& model): BEvent(FinC1, model) {}
 
 FinalizarControlador1::~FinalizarControlador1() {}
-/*Devolvemos el token, ya que el ascensor esta libre*/
+
 void FinalizarControlador1::eventRoutine(Entity* who) {
 	ModeloAscensor& ascensor = dynamic_cast<ModeloAscensor&>(owner);
-	ascensor.utilizacionAscensores.log((ascensor.libreAscensor1.getMax()+ascensor.libreAscensor2.getMax())-(ascensor.libreAscensor1.getQuantity()+ascensor.libreAscensor2.getQuantity()));
-    ascensor.libreAscensor1.returnBin(1);
+	FinalizarControlador(who, &ascensor, &(ascensor.controlador1), &(ascensor.libreAscensor1), ascensor.trayectoriaA1, "output/trayectoriaA1.txt");
 }
 
 //eventos c2
-/*Los comentarios de arriba tambien aplican para estos*/
+
 IniciarControlador2::IniciarControlador2(Model& model): CEvent(model) {}
 
 IniciarControlador2::~IniciarControlador2() {}
 
 void IniciarControlador2::eventRoutine() {
 	ModeloAscensor& ascensor = dynamic_cast<ModeloAscensor&>(owner);
-	if(!ascensor.q2.empty() && ascensor.libreAscensor2.isAvailable(1)) {
-        Entity* who = ascensor.q2.pop();
-        Pedido& p = dynamic_cast<Pedido&>(*who);
-        ascensor.tEspera.log(ascensor.getSimTime() - p.getClock());
-        ascensor.utilizacionAscensores.log((ascensor.libreAscensor1.getMax()+ascensor.libreAscensor2.getMax())-(ascensor.libreAscensor1.getQuantity()+ascensor.libreAscensor2.getQuantity()));
-        ascensor.libreAscensor2.acquire(1);
-        ascensor.controlador2.setPisoDeseado(p.getPiso());
-        ascensor.schedule(0.0, new Entity(), Consulta2);
-        ascensor.schedule(0.0, new Entity(), DecisionC2);
-    }
+    IniciarControlador(&(ascensor.q2),&(ascensor.libreAscensor2),&(ascensor.controlador2),&ascensor,Consulta2,DecisionC2);
 }
 
 DecisionControlador2::DecisionControlador2(Model& model): BEvent(DecisionC2, model) {}
@@ -132,17 +174,7 @@ DecisionControlador2::~DecisionControlador2() {}
 
 void DecisionControlador2::eventRoutine(Entity* who) {
 	ModeloAscensor& ascensor = dynamic_cast<ModeloAscensor&>(owner);
-    if(ascensor.controlador2.getPisoDeseado() < ascensor.controlador2.getPisoActual()) {
-        ascensor.schedule(0.0, new Entity(), BajarC2);
-    }
-    else {
-        if(ascensor.controlador2.getPisoDeseado() > ascensor.controlador2.getPisoActual()) {
-            ascensor.schedule(0.0, new Entity(), SubirC2);
-        }
-        else {
-            ascensor.schedule(0.0, new Entity(), PararC2);
-        }
-    }
+    DecisionControlador(who, &(ascensor.controlador2), &ascensor, SubirC2, BajarC2, PararC2);
 }
 
 
@@ -152,7 +184,7 @@ SubirControlador2::~SubirControlador2() {}
 
 void SubirControlador2::eventRoutine(Entity* who) {
 	ModeloAscensor& ascensor = dynamic_cast<ModeloAscensor&>(owner);
-    ascensor.schedule(0.0, new Entity(), SubirA2);
+    SubirControlador(who, &ascensor, SubirA2);
 }
 
 BajarControlador2::BajarControlador2(Model& model): BEvent(BajarC2, model) {}
@@ -161,7 +193,7 @@ BajarControlador2::~BajarControlador2() {}
 
 void BajarControlador2::eventRoutine(Entity* who) {
 	ModeloAscensor& ascensor = dynamic_cast<ModeloAscensor&>(owner);
-    ascensor.schedule(0.0, new Entity(), BajarA2);
+    BajarControlador(who, &ascensor, BajarA2);
 }
 
 PararControlador2::PararControlador2(Model& model): BEvent(PararC2, model) {}
@@ -170,7 +202,7 @@ PararControlador2::~PararControlador2() {}
 
 void PararControlador2::eventRoutine(Entity* who) {
 	ModeloAscensor& ascensor = dynamic_cast<ModeloAscensor&>(owner);
-    ascensor.schedule(0.0, new Entity(), PararA2);
+    PararControlador(who, &ascensor, PararA2);
 }
 
 FinalizarControlador2::FinalizarControlador2(Model& model): BEvent(FinC2, model) {}
@@ -179,8 +211,7 @@ FinalizarControlador2::~FinalizarControlador2() {}
 
 void FinalizarControlador2::eventRoutine(Entity* who) {
 	ModeloAscensor& ascensor = dynamic_cast<ModeloAscensor&>(owner);
-    ascensor.utilizacionAscensores.log((ascensor.libreAscensor1.getMax()+ascensor.libreAscensor2.getMax())-(ascensor.libreAscensor1.getQuantity()+ascensor.libreAscensor2.getQuantity()));
-    ascensor.libreAscensor2.returnBin(1);
+	FinalizarControlador(who, &ascensor, &(ascensor.controlador2), &(ascensor.libreAscensor2), ascensor.trayectoriaA2, "output/trayectoriaA2.txt");
 }
 
 

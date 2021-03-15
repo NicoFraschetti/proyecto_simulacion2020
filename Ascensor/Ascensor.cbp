@@ -28,11 +28,13 @@
 		<Unit filename="headers/controlador.hpp" />
 		<Unit filename="headers/modelo_ascensor.hpp" />
 		<Unit filename="headers/pedido.hpp" />
+		<Unit filename="headers/utils.hpp" />
 		<Unit filename="src/ascensor.cpp" />
 		<Unit filename="src/controlador.cpp" />
 		<Unit filename="src/main.cpp" />
 		<Unit filename="src/modelo_ascensor.cpp" />
 		<Unit filename="src/pedido.cpp" />
+		<Unit filename="src/utils.cpp" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>
