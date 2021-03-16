@@ -8,7 +8,7 @@ set style line 2 \
         linetype 1 linewidth 1 \
 	pointtype 7 pointsize 1
 #Set ranges
-set xrange[0:500]
+set xrange[0:1000]
 set yrange[0:10]
 #Set names
 set xlabel "Tiempo"
@@ -19,7 +19,7 @@ plot  'output/trayectoriaA1.txt' using 2:1 with linespoints linestyle 1
 #new window
 set term x11 1
 #set ranges
-set xrange[0:500]
+set xrange[0:1000]
 set yrange[0:10]
 #Set names
 set xlabel "Tiempo"
