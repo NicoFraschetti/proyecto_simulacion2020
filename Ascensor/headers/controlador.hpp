@@ -6,6 +6,7 @@
         private:
             int pisoDeseado;
             int pisoActual;
+            double tiempoEntradaPedido;
         public:
             Controlador();
 
@@ -18,6 +19,10 @@
             void setPisoDeseado(int newPiso);
 
             void setPisoActual(int newPiso);
+
+            double getTiempoEntradaPedido();
+
+            void setTiempoEntradaPedido(double tiempo);
 
     };
 

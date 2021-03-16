@@ -8,6 +8,7 @@
 int main()
 {
     using namespace eosim::core;
+    std::string c;
     std::cout << "Ingrese cuantas simulaciones quiere correr" << std::endl;
     int numSimulaciones;
     std::cin >> numSimulaciones;
@@ -15,9 +16,10 @@ int main()
     std::cout << "Si desea graficarlas, sea consciente de que la simulacion se hara mas lenta por los accesos a disco" << std::endl;
     int graficos;
     std::cin >> graficos;
-    double simTime = 100000.0;
+    double simTime = 200000.0;
     double promediosEspera[numSimulaciones];
     double promediosUtilizacion[numSimulaciones];
+    double promediosProcesado[numSimulaciones];
     for (int i = 0; i< numSimulaciones; i++) {
         ModeloAscensor m = ModeloAscensor(3.4, (unsigned long) i + 129, graficos,0);
         Experiment e;
@@ -29,6 +31,12 @@ int main()
         std :: cout << "Factor de utilizacion ascensores (tonto) " << m.utilizacionAscensores.getMean() / (m.libreAscensor1.getMax()+m.libreAscensor2.getMax()) << std :: endl;
         promediosUtilizacion[i] = m.utilizacionAscensores.getMean() / (m.libreAscensor1.getMax()+m.libreAscensor2.getMax());
         promediosEspera[i] = m.tEspera.getMean();
+        promediosProcesado[i] = m.tProcesado.getMean();
+        if(graficos == 1) {
+            system("gnuplot -p plot_trayectoria_ascensores.sh");
+            std::cout << "Ingrese una tecla para continuar" << std::endl;
+            std :: cin >> c;
+        }
         ModeloAscensor m1 = ModeloAscensor(3.4, (unsigned long) i + 129, graficos,1);
         Experiment e1;
         m1.connectToExp(&e1);
@@ -41,12 +49,20 @@ int main()
 
         if(graficos == 1) {
             system("gnuplot -p plot_trayectoria_ascensores.sh");
+            std::cout << "Ingrese una tecla para continuar" << std::endl;
+            std :: cin >> c;
         }
     }
-   /* if(numSimulaciones > 1) {
+    if(numSimulaciones > 1) {
         std::cout << "Tiempo medio general en cola: " << utils::calcularMediaMuestral(promediosEspera,numSimulaciones) << std::endl;
         std::cout << "Varianza de tiempos en cola: " << utils::calcularVarianzaMuestral(promediosEspera,numSimulaciones) << std::endl;
         std::cout << "Desvio de tiempos en cola: " << sqrt(utils::calcularVarianzaMuestral(promediosEspera,numSimulaciones)) << std::endl;
-    }*/
+        std::cout << "Media general utilizacion: " << utils::calcularMediaMuestral(promediosUtilizacion,numSimulaciones) << std::endl;
+        std::cout << "Varianza general utilizacion: " << utils::calcularVarianzaMuestral(promediosUtilizacion,numSimulaciones) << std::endl;
+        std::cout << "Desvio general utilizacion: " << sqrt(utils::calcularVarianzaMuestral(promediosUtilizacion,numSimulaciones)) << std::endl;
+        std::cout << "Media general procesado: " << utils::calcularMediaMuestral(promediosProcesado,numSimulaciones) << std::endl;
+        std::cout << "Varianza general procesado: " << utils::calcularVarianzaMuestral(promediosProcesado,numSimulaciones) << std::endl;
+        std::cout << "Desvio general procesado: " << sqrt(utils::calcularVarianzaMuestral(promediosProcesado,numSimulaciones)) << std::endl;
+    }
     return 0;
 }

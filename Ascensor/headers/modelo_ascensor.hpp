@@ -79,6 +79,8 @@ public:
 
 	eosim::statics::Observation tEspera;
 
+	eosim::statics::Observation tProcesado;
+
     eosim::statics::TimeWeighted utilizacionAscensores;
 
 	eosim::core::Renewable libreAscensor1;

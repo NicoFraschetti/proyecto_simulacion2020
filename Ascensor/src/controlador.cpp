@@ -6,6 +6,7 @@
 Controlador::Controlador() {
     pisoActual = 0;
     pisoDeseado = 0;
+    tiempoEntradaPedido = 0.0;
 }
 
 Controlador::~Controlador() {}
@@ -24,6 +25,14 @@ void Controlador::setPisoActual(int newPiso) {
 
 void Controlador::setPisoDeseado(int newPiso) {
     pisoDeseado = newPiso;
+}
+
+void Controlador::setTiempoEntradaPedido(double tiempo) {
+    tiempoEntradaPedido = tiempo;
+}
+
+double Controlador::getTiempoEntradaPedido() {
+    return tiempoEntradaPedido;
 }
 
 using namespace eosim::core;
@@ -45,6 +54,7 @@ void IniciarControlador(eosim::utils::EntityQueueFifo* q, eosim::core::Renewable
         Pedido& p = dynamic_cast<Pedido&>(*who);
         LogTiempos(m,&p);
         LogUtilizacion(m);
+        c -> setTiempoEntradaPedido(p.getClock());
         t->acquire(1);
         c->setPisoDeseado(p.getPiso());
         delete(who);
@@ -91,6 +101,7 @@ void PararControlador(Entity* who, ModeloAscensor* m, std::string eventoParar) {
 /*Devolvemos el token, ya que el ascensor esta libre*/
 void FinalizarControlador(Entity* who, ModeloAscensor* m, Controlador* c, eosim::core::Renewable* t, FILE* internalFileName, char* externalFileName) {
     LogUtilizacion(m);
+    m -> tProcesado.log(m -> getSimTime()-c ->getTiempoEntradaPedido());
     t->returnBin(1);
     delete(who);
     if(m->graficos) {

@@ -43,6 +43,7 @@ ModeloAscensor::ModeloAscensor(double tasaArribos, int seedPisos, int g, int i):
             pA2(*this),
 
             tEspera("Tiempos de Espera para subir al ascensor"),
+            tProcesado("Tiempos de servicio del sistema"),
             utilizacionAscensores("Factor de utilizacion ascensores", *this),
             arribos(MT19937, tasaArribos),
             libreAscensor1(1, 1),
