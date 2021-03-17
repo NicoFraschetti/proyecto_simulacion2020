@@ -8,7 +8,7 @@
 
 Pedido::Pedido(int seed) {
     srand(seed);
-    piso = 3;//rand() % 10;
+    piso = rand() % 10;
 }
 
 
@@ -83,8 +83,7 @@ void DecidirAscensor::eventRoutine() {
         }
 	}
 }
-
-double tiempoEstimadoAscensor(eosim::utils::EntityQueueFifo* q, Controlador* c) {
+double tiempoEstimadoAscensor(eosim::utils::EntityQueueFifo* q, Controlador* c, Pedido* p1) {
     double tiempoParcial = abs(c->getPisoDeseado()-c->getPisoActual())*2.0;
     int lugarAscensor = c->getPisoDeseado();
     for (unsigned int i=0; i<q->size();i++) {
@@ -93,6 +92,7 @@ double tiempoEstimadoAscensor(eosim::utils::EntityQueueFifo* q, Controlador* c) 
         tiempoParcial += (abs(lugarAscensor-p.getPiso())+0.0)*2.0;
         lugarAscensor = p.getPiso();
     }
+    tiempoParcial += (abs(lugarAscensor-p1->getPiso())+0.0)*2.0;
     return tiempoParcial;
 }
 
@@ -103,14 +103,12 @@ DecidirAscensorInteligente::~DecidirAscensorInteligente() {}
 void DecidirAscensorInteligente::eventRoutine() {
     ModeloAscensor& ascensor = dynamic_cast<ModeloAscensor&>(owner);
 	if(!ascensor.q0.empty() && ascensor.inteligencia == 1) {
-        if(tiempoEstimadoAscensor(&(ascensor.q1),&(ascensor.controlador1)) <= tiempoEstimadoAscensor(&(ascensor.q2),&(ascensor.controlador2))) {
-            Entity* who = ascensor.q0.pop();
-            Pedido& p = dynamic_cast<Pedido&>(*who);
+        Entity* who = ascensor.q0.pop();
+        Pedido& p = dynamic_cast<Pedido&>(*who);
+        if(tiempoEstimadoAscensor(&(ascensor.q1),&(ascensor.controlador1), &p) <= tiempoEstimadoAscensor(&(ascensor.q2),&(ascensor.controlador2), &p)) {
             ascensor.q1.push(who);
         }
         else {
-            Entity* who = ascensor.q0.pop();
-            Pedido& p = dynamic_cast<Pedido&>(*who);
             ascensor.q2.push(who);
         }
 	}
